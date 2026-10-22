@@ -12,6 +12,14 @@ def fib_recur(n: int) -> int:
         return fib_recur(n - 2) + fib_recur(n - 1)
 
 
+def fib_tail(n: int, n1: int, n2: int, res={0: 0, 1: 1}) -> int:
+    if n < 2:
+        return res[n]
+    else:
+        res[n] = res[n1] + res[n2]
+        return fib_tail(n - 1, n - 1, n - 2, res)
+
+
 @pytest.mark.parametrize(
     "n, res",
     [
