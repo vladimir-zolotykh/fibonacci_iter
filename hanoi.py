@@ -6,9 +6,9 @@ from array import array
 import pytest
 
 
-pegs: [array("i"), array("i"), array("i")]
 PegType = array
 PegsType = list[PegType]
+pegs: PegsType = [array("i"), array("i"), array("i")]
 
 
 def init_pegs(pegs: PegsType, ndisks: int = 3):
@@ -19,12 +19,14 @@ def init_pegs(pegs: PegsType, ndisks: int = 3):
 
 def move(pegs: PegsType, src: int, dst: int) -> None:
     validate(pegs, src, dst)
-    dst.append(src.pop())
+    pegs[dst].append(pegs[src].pop())
 
 
 def validate(pegs: PegsType, src: int, dst: int) -> None:
-    disk = src[-1:]
-    under = dst[-1:]
+    disk = pegs[src][-1]
+    if not pegs[dst]:
+        return
+    under = pegs[dst][-1]
     if under > disk:
         return
     raise RuntimeError(f"Cannot put {disk} #src on {under} #{dst}")
@@ -42,10 +44,15 @@ def solve(pegs: PegsType, n: int, src: int, dst: int, aux: int) -> None:
     "n",
     [
         3,
+        4,
+        5,
+        6,
+        7,
+        8,
     ],
 )
 def test_solve(n):
     init_pegs(pegs, n)
     orig = copy(pegs[0])
-    solve(n, pegs, 0, 2, 1)
+    solve(pegs, n, 0, 2, 1)
     assert pegs[2] == orig
