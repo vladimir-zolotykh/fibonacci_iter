@@ -13,7 +13,7 @@ def fib_recur(n: int) -> int:
 
 
 def fib_iter(n: int) -> int:
-    res = {0: 0, 1: 1}
+    res = {}
     for i in range(n + 1):
         if i < 2:
             res[i] = i
