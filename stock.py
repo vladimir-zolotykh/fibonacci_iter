@@ -24,13 +24,13 @@ class Field(ABC):
         pass
 
 
-class Typed:
+class Typed(Field):
     def validate(self, instance, val):
         if not isinstance(val, self._expected):
             raise TypeError(f"{val!r} is not of type {self._expected}")
 
 
-class Unsigned:
+class Unsigned(Field):
     def validate(self, instancem, val):
         if val < 0:
             raise ValueError(f"{val!r} must not be signed")
@@ -111,8 +111,8 @@ def test_float():
 
     s = Stock(91.1)
     assert s.price == 91.1
-    # with pytest.raises(TypeError, match="foo"):
-    #     s.price = "too much"
+    with pytest.raises(TypeError, match="'too much' is not of type <class 'float'>"):
+        s.price = "too much"
 
 
 def test_sizedstring(stock):
