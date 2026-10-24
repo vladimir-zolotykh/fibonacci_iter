@@ -82,5 +82,5 @@ class Stock:
 
 
 if __name__ == "__main__":
-    s = Stock()
-    print(s)
+    s = Stock("ACME", 50, 91.1)
+    print(s.name, s.shares, s.price)
