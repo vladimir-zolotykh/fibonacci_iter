@@ -102,6 +102,19 @@ def stock():
     return Stock("ACME", 50, 91.1)
 
 
+def test_integer():
+    class Stock:
+        shares = Integer()
+
+        def __init__(self, shares):
+            self.shares = shares
+
+    s = Stock(50)
+    assert s.shares == 50
+    with pytest.raises(TypeError, match="'50' is not of type <class 'int'>"):
+        s.shares = "50"
+
+
 def test_float():
     class Stock:
         price = Float()
