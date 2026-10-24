@@ -58,10 +58,10 @@ class String(Typed):
 class Float(Typed):
     _expected = float
 
-    def validate(self, instance, val):
-        print(f"{val = }")
-        if not isinstance(val, self._expected):
-            raise TypeError(f"{val!r} is not of type {self._expected}")
+    # def validate(self, instance, val):
+    #     print(f"{val = }")
+    #     if not isinstance(val, self._expected):
+    #         raise TypeError(f"{val!r} is not of type {self._expected}")
 
 
 class Integer(Typed):
@@ -100,6 +100,19 @@ class Stock:
 @pytest.fixture
 def stock():
     return Stock("ACME", 50, 91.1)
+
+
+def test_float():
+    class Stock:
+        price = Float()
+
+        def __init__(self, price):
+            self.price = 91.1
+
+    s = Stock(91.1)
+    assert s.price == 91.1
+    # with pytest.raises(TypeError, match="foo"):
+    #     s.price = "too much"
 
 
 def test_sizedstring(stock):
