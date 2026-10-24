@@ -41,7 +41,6 @@ class MaxSized(Field):
         self.size = size
 
     def validate(self, instancem, val):
-        print("MaxSized.validate")
         if len(val) > self.size:
             raise ValueError(
                 f"{val!r} must not exceed {self.size} characters in lenght"
@@ -59,6 +58,11 @@ class String(Typed):
 class Float(Typed):
     _expected = float
 
+    def validate(self, instance, val):
+        print(f"{val = }")
+        if not isinstance(val, self._expected):
+            raise TypeError(f"{val!r} is not of type {self._expected}")
+
 
 class Integer(Typed):
     _expected = int
@@ -69,7 +73,11 @@ class UnsignedInteger(Integer, Unsigned):
 
 
 class UnsignedFloat(Float, Unsigned):
-    pass
+    print("UnsignedFloat")
+
+    def validate(self, instance, val):
+        super().validate(instance, val)  # Float.validate
+        super(Typed, self).validate(instance, val)  # Unsigned.validate
 
 
 class SizedString(String, MaxSized):
@@ -100,6 +108,12 @@ def test_sizedstring(stock):
         stock.name = 12.2
     with pytest.raises(ValueError, match=""):
         stock.name = "ABRACADABRA"
+
+
+def test_unsignedfloat(stock):
+    assert stock.price == 91.1
+    with pytest.raises(TypeError, match="foo"):
+        stock.price = -100.10
 
 
 if __name__ == "__main__":
