@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
 from abc import ABC, abstractmethod
+import pytest
 
 
 class Field(ABC):
@@ -79,6 +80,15 @@ class Stock:
         self.name = name
         self.shares = shares
         self.price = price
+
+
+@pytest.fixture
+def stock():
+    return Stock("ACME", 50, 91.1)
+
+
+def test_sizedstring(stock):
+    assert stock.name == "ACME"
 
 
 if __name__ == "__main__":
