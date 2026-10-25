@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
 from abc import ABC, abstractmethod
+import pytest
 
 
 class Field(ABC):
@@ -49,37 +50,31 @@ class MaxSized(Field):
 class String(Typed):
     _expected = str
 
-    def validate(self, instance, val):
-        super().validate(instance, val)
-
 
 class Float(Typed):
     _expected = float
-
-    def validate(self, instance, val):
-        super().validate(instance, val)
 
 
 class Integer(Typed):
     _expected = int
 
-    def validate(self, instance, val):
-        super().validate(instance, val)
-
 
 class UnsignedInteger(Integer, Unsigned):
     def validate(self, instance, val):
-        super().validate(instance, val)
+        super().validate(instance, val)  # Integer.validate
+        super(Typed, self).validate(instance, val)  # Unsigned.validate
 
 
 class UnsignedFloat(Float, Unsigned):
     def validate(self, instance, val):
-        super().validate(instance, val)
+        super().validate(instance, val)  # Float.validate
+        super(Typed, self).validate(instance, val)  # Unsigned.validate
 
 
 class SizedString(String, MaxSized):
     def validate(self, instance, val):
-        super().validate(instance, val)
+        super().validate(instance, val)  # String.validate
+        super(Typed, self).validate(instance, val)  # MaxSized.validate
 
 
 class Stock:
