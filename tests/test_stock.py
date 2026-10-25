@@ -50,3 +50,16 @@ def test_sizedstring(stock):
         stock.name = 12.2
     with pytest.raises(ValueError, match=""):
         stock.name = "ABRACADABRA"
+
+
+def test_unsignedinteger():
+    s = Stock("ACME", 50, 91.1)
+    assert s.shares == 50
+    with pytest.raises(TypeError, match="'few' is not of type <class 'int'>"):
+        s.shares = "few"
+
+
+def test_unsignedfloat(stock):
+    assert stock.price == 91.1
+    with pytest.raises(ValueError, match="-100.1 must not be signed"):
+        stock.price = -100.10
