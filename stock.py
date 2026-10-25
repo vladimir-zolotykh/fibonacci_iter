@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
 from abc import ABC, abstractmethod
-import pytest
 
 
 class Field(ABC):
@@ -57,11 +56,6 @@ class String(Typed):
 
 class Float(Typed):
     _expected = float
-
-    # def validate(self, instance, val):
-    #     print(f"{val = }")
-    #     if not isinstance(val, self._expected):
-    #         raise TypeError(f"{val!r} is not of type {self._expected}")
 
 
 class Integer(Typed):
