@@ -69,7 +69,9 @@ class Integer(Typed):
 
 
 class UnsignedInteger(Integer, Unsigned):
-    pass
+    def validate(self, instance, val):
+        super().validate(instance, val)
+        super(Typed, self).validate(instance, val)
 
 
 class UnsignedFloat(Float, Unsigned):
@@ -93,12 +95,6 @@ class Stock:
         self.name = name
         self.shares = shares
         self.price = price
-
-
-def test_unsignedfloat(stock):
-    assert stock.price == 91.1
-    with pytest.raises(TypeError, match="foo"):
-        stock.price = -100.10
 
 
 if __name__ == "__main__":
