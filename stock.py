@@ -61,11 +61,13 @@ class Float(Typed):
 class Integer(Typed):
     _expected = int
 
+    def validate(self, instance, val):
+        super().validate(instance, val)
+
 
 class UnsignedInteger(Integer, Unsigned):
     def validate(self, instance, val):
         super().validate(instance, val)
-        super(Typed, self).validate(instance, val)
 
 
 class UnsignedFloat(Float, Unsigned):
