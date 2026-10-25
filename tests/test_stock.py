@@ -46,7 +46,7 @@ def stock():
 
 def test_sizedstring(stock):
     assert stock.name == "ACME"
-    with pytest.raises(TypeError, match="12.2 must be of type <class 'str'>"):
+    with pytest.raises(TypeError, match="12.2 is not of type <class 'str'"):
         stock.name = 12.2
     with pytest.raises(ValueError, match=""):
         stock.name = "ABRACADABRA"
@@ -57,6 +57,8 @@ def test_unsignedinteger():
     assert s.shares == 50
     with pytest.raises(TypeError, match="'few' is not of type <class 'int'>"):
         s.shares = "few"
+    with pytest.raises(ValueError, match="-10 must not be signed"):
+        s.shares = -10
 
 
 def test_unsignedfloat(stock):

@@ -30,7 +30,7 @@ class Typed(Field):
 
 
 class Unsigned(Field):
-    def validate(self, instancem, val):
+    def validate(self, instance, val):
         if val < 0:
             raise ValueError(f"{val!r} must not be signed")
 
@@ -39,7 +39,7 @@ class MaxSized(Field):
     def __init__(self, size=8):
         self.size = size
 
-    def validate(self, instancem, val):
+    def validate(self, instance, val):
         if len(val) > self.size:
             raise ValueError(
                 f"{val!r} must not exceed {self.size} characters in lenght"
@@ -50,8 +50,7 @@ class String(Typed):
     _expected = str
 
     def validate(self, instance, val):
-        if not isinstance(val, self._expected):
-            raise TypeError(f"{val!r} must be of type {self._expected}")
+        super().validate(instance, val)
 
 
 class Float(Typed):
@@ -73,7 +72,7 @@ class UnsignedInteger(Integer, Unsigned):
         super().validate(instance, val)
 
 
-class UnsignedFloat(Unsigned, Float):
+class UnsignedFloat(Float, Unsigned):
     def validate(self, instance, val):
         super().validate(instance, val)
 
@@ -81,7 +80,6 @@ class UnsignedFloat(Unsigned, Float):
 class SizedString(String, MaxSized):
     def validate(self, instance, val):
         super().validate(instance, val)
-        super(Typed, self).validate(instance, val)
 
 
 class Stock:
