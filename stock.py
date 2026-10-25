@@ -57,6 +57,9 @@ class String(Typed):
 class Float(Typed):
     _expected = float
 
+    def validate(self, instance, val):
+        super().validate(instance, val)
+
 
 class Integer(Typed):
     _expected = int
@@ -70,10 +73,9 @@ class UnsignedInteger(Integer, Unsigned):
         super().validate(instance, val)
 
 
-class UnsignedFloat(Float, Unsigned):
+class UnsignedFloat(Unsigned, Float):
     def validate(self, instance, val):
-        super().validate(instance, val)  # Float.validate
-        super(Typed, self).validate(instance, val)  # Unsigned.validate
+        super().validate(instance, val)
 
 
 class SizedString(String, MaxSized):
