@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
 from abc import ABC, abstractmethod
-import pytest
 from functools import wraps
 
 
@@ -23,7 +22,7 @@ class Field(ABC):
     def __init_subclass__(cls, **kwargs):
         old = getattr(cls, "validate", None)
         if old:
-            setattr(cls, "validate", show_validate(old))
+            setattr(cls, "validate", show_validate(cls.__name__)(old))
         super().__init_subclass__(**kwargs)
 
     @abstractmethod
@@ -34,15 +33,19 @@ class Field(ABC):
 SHOW_VALIDATE_ON = False
 
 
-def show_validate(func):
-    @wraps(func)
-    def wrapper(self, val):
-        if SHOW_VALIDATE_ON:
-            print(f"***** {self.__class__.__name__}.{func.__name__}({val})")
-        res = func(self, val)
-        return res
+def show_validate(label):
+    def decorate(func):
 
-    return wrapper
+        @wraps(func)
+        def wrapper(self, val):
+            if SHOW_VALIDATE_ON:
+                print(f"***** {label}.{func.__name__}({val})")
+            res = func(self, val)
+            return res
+
+        return wrapper
+
+    return decorate
 
 
 class Typed(Field):
