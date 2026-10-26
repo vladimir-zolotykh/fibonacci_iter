@@ -25,21 +25,18 @@ class Field(ABC):
         pass
 
 
-def show_validate(label):
-    def decorate(func):
-        @wraps(func)
-        def wrapper(self, val):
-            print(f"***** {label}.validate({val})")
-            res = func(self, val)
-            return res
+def show_validate(func):
+    @wraps(func)
+    def wrapper(self, val):
+        print(f"***** {self.__class__.__name__}.{func.__name__}({val})")
+        res = func(self, val)
+        return res
 
-        return wrapper
-
-    return decorate
+    return wrapper
 
 
 class Typed(Field):
-    @show_validate("Typed")
+    @show_validate
     def validate(self, val):
         if not isinstance(val, self._expected):
             raise TypeError(f"{val!r} is not of type {self._expected}")
@@ -47,7 +44,7 @@ class Typed(Field):
 
 
 class Unsigned(Field):
-    @show_validate("Unsigned")
+    @show_validate
     def validate(self, val):
         if val < 0:
             raise ValueError(f"{val!r} must not be signed")
@@ -58,7 +55,7 @@ class MaxSized(Field):
     def __init__(self, size=8):
         self.size = size
 
-    @show_validate("MaxSized")
+    @show_validate
     def validate(self, val):
         if len(val) > self.size:
             raise ValueError(
@@ -70,7 +67,7 @@ class MaxSized(Field):
 class String(Typed):
     _expected = str
 
-    @show_validate("String")
+    @show_validate
     def validate(self, val):
         super().validate(val)
 
@@ -78,7 +75,7 @@ class String(Typed):
 class Float(Typed):
     _expected = float
 
-    @show_validate("Float")
+    @show_validate
     def validate(self, val):
         super().validate(val)
 
@@ -86,25 +83,25 @@ class Float(Typed):
 class Integer(Typed):
     _expected = int
 
-    @show_validate("Integer")
+    @show_validate
     def validate(self, val):
         super().validate(val)
 
 
 class UnsignedInteger(Integer, Unsigned):
-    @show_validate("UnsignedInteger")
+    @show_validate
     def validate(self, val):
         super().validate(val)
 
 
 class UnsignedFloat(Float, Unsigned):
-    @show_validate("UnsignedFloat")
+    @show_validate
     def validate(self, val):
         super().validate(val)
 
 
 class SizedString(String, MaxSized):
-    @show_validate("SizedString")
+    @show_validate
     def validate(self, val):
         super().validate(val)
 
