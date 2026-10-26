@@ -49,9 +49,9 @@ class Typed(Field):
 class Unsigned(Field):
     @show_validate("Unsigned")
     def validate(self, val):
-        super().validate(val)
         if val < 0:
             raise ValueError(f"{val!r} must not be signed")
+        super().validate(val)
 
 
 class MaxSized(Field):
@@ -60,11 +60,11 @@ class MaxSized(Field):
 
     @show_validate("MaxSized")
     def validate(self, val):
-        super().validate(val)
         if len(val) > self.size:
             raise ValueError(
                 f"{val!r} must not exceed {self.size} characters in lenght"
             )
+        super().validate(val)
 
 
 class String(Typed):
