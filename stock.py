@@ -3,6 +3,7 @@
 # PYTHON_ARGCOMPLETE_OK
 from abc import ABC, abstractmethod
 import pytest
+from functools import wraps
 
 
 class Field(ABC):
@@ -16,22 +17,39 @@ class Field(ABC):
         return instance.__dict__[self.sys_name]
 
     def __set__(self, instance, val):
-        self.validate(instance, val)
+        self.validate(val)
         instance.__dict__[self.sys_name] = val
 
     @abstractmethod
-    def validate(self, instance, val):
+    def validate(self, val):
         pass
 
 
+def show_validate(label):
+    def decorate(func):
+        @wraps(func)
+        def wrapper(self, val):
+            print(f"***** {label}.validate({val})")
+            res = func(self, val)
+            return res
+
+        return wrapper
+
+    return decorate
+
+
 class Typed(Field):
-    def validate(self, instance, val):
+    @show_validate("Typed")
+    def validate(self, val):
+        super().validate(val)
         if not isinstance(val, self._expected):
             raise TypeError(f"{val!r} is not of type {self._expected}")
 
 
 class Unsigned(Field):
-    def validate(self, instance, val):
+    @show_validate("Typed")
+    def validate(self, val):
+        super().validate(val)
         if val < 0:
             raise ValueError(f"{val!r} must not be signed")
 
@@ -40,7 +58,9 @@ class MaxSized(Field):
     def __init__(self, size=8):
         self.size = size
 
-    def validate(self, instance, val):
+    @show_validate("MaxSized")
+    def validate(self, val):
+        super().validate(val)
         if len(val) > self.size:
             raise ValueError(
                 f"{val!r} must not exceed {self.size} characters in lenght"
@@ -50,31 +70,43 @@ class MaxSized(Field):
 class String(Typed):
     _expected = str
 
+    @show_validate("String")
+    def validate(self, val):
+        super().validate(val)
+
 
 class Float(Typed):
     _expected = float
+
+    @show_validate("Float")
+    def validate(self, val):
+        super().validate(val)
 
 
 class Integer(Typed):
     _expected = int
 
+    @show_validate("Integer")
+    def validate(self, val):
+        super().validate(val)
+
 
 class UnsignedInteger(Integer, Unsigned):
-    def validate(self, instance, val):
-        super().validate(instance, val)  # Integer.validate
-        super(Typed, self).validate(instance, val)  # Unsigned.validate
+    @show_validate("UnsignedInteger")
+    def validate(self, val):
+        super().validate(val)
 
 
 class UnsignedFloat(Float, Unsigned):
-    def validate(self, instance, val):
-        super().validate(instance, val)  # Float.validate
-        super(Typed, self).validate(instance, val)  # Unsigned.validate
+    @show_validate("UnsignedFloat")
+    def validate(self, val):
+        super().validate(val)
 
 
 class SizedString(String, MaxSized):
-    def validate(self, instance, val):
-        super().validate(instance, val)  # String.validate
-        super(Typed, self).validate(instance, val)  # MaxSized.validate
+    @show_validate("SizedString")
+    def validate(self, val):
+        super().validate(val)
 
 
 class Stock:
@@ -88,6 +120,15 @@ class Stock:
         self.price = price
 
 
+def test_unsignedinteger():
+    s = Stock("ACME", 50, 91.1)
+    print("+++++")
+    s.shares = "few"
+    s.shares = -10
+
+
 if __name__ == "__main__":
+    test_unsignedinteger()
+    exit(1)
     s = Stock("ACME", 50, 91.1)
     print(s.name, s.shares, s.price)
