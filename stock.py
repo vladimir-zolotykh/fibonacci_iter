@@ -40,7 +40,7 @@ def show_validate(func):
 
 
 class Typed(Field):
-    @show_validate
+    # @show_validate
     def validate(self, val):
         if not isinstance(val, self._expected):
             raise TypeError(f"{val!r} is not of type {self._expected}")
@@ -48,7 +48,7 @@ class Typed(Field):
 
 
 class Unsigned(Field):
-    @show_validate
+    # @show_validate
     def validate(self, val):
         if val < 0:
             raise ValueError(f"{val!r} must not be signed")
@@ -59,7 +59,7 @@ class MaxSized(Field):
     def __init__(self, size=8):
         self.size = size
 
-    @show_validate
+    # @show_validate
     def validate(self, val):
         if len(val) > self.size:
             raise ValueError(
@@ -71,7 +71,7 @@ class MaxSized(Field):
 class String(Typed):
     _expected = str
 
-    @show_validate
+    # @show_validate
     def validate(self, val):
         super().validate(val)
 
@@ -79,7 +79,7 @@ class String(Typed):
 class Float(Typed):
     _expected = float
 
-    @show_validate
+    # @show_validate
     def validate(self, val):
         super().validate(val)
 
@@ -87,25 +87,25 @@ class Float(Typed):
 class Integer(Typed):
     _expected = int
 
-    @show_validate
+    # @show_validate
     def validate(self, val):
         super().validate(val)
 
 
 class UnsignedInteger(Integer, Unsigned):
-    @show_validate
+    # @show_validate
     def validate(self, val):
         super().validate(val)
 
 
 class UnsignedFloat(Float, Unsigned):
-    @show_validate
+    # @show_validate
     def validate(self, val):
         super().validate(val)
 
 
 class SizedString(String, MaxSized):
-    @show_validate
+    # @show_validate
     def validate(self, val):
         super().validate(val)
 
