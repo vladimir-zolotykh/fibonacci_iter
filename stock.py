@@ -20,6 +20,12 @@ class Field(ABC):
         self.validate(val)
         instance.__dict__[self.sys_name] = val
 
+    def __init_subclass__(cls, **kwargs):
+        old = getattr(cls, "validate", None)
+        if old:
+            setattr(cls, "validate", show_validate(old))
+        super().__init_subclass__(**kwargs)
+
     @abstractmethod
     def validate(self, val):
         pass
