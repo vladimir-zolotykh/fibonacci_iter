@@ -41,13 +41,13 @@ def show_validate(label):
 class Typed(Field):
     @show_validate("Typed")
     def validate(self, val):
-        super().validate(val)
         if not isinstance(val, self._expected):
             raise TypeError(f"{val!r} is not of type {self._expected}")
+        super().validate(val)
 
 
 class Unsigned(Field):
-    @show_validate("Typed")
+    @show_validate("Unsigned")
     def validate(self, val):
         super().validate(val)
         if val < 0:
@@ -123,7 +123,7 @@ class Stock:
 def test_unsignedinteger():
     s = Stock("ACME", 50, 91.1)
     print("+++++")
-    s.shares = "few"
+    # s.shares = "few"
     s.shares = -10
 
 
