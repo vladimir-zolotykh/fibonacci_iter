@@ -63,5 +63,7 @@ def test_unsignedinteger():
 
 def test_unsignedfloat(stock):
     assert stock.price == 91.1
+    with pytest.raises(TypeError, match="'little' is not of type <class 'float'>"):
+        stock.price = "little"
     with pytest.raises(ValueError, match="-100.1 must not be signed"):
         stock.price = -100.10
