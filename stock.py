@@ -25,10 +25,14 @@ class Field(ABC):
         pass
 
 
+SHOW_VALIDATE_ON = False
+
+
 def show_validate(func):
     @wraps(func)
     def wrapper(self, val):
-        print(f"***** {self.__class__.__name__}.{func.__name__}({val})")
+        if SHOW_VALIDATE_ON:
+            print(f"***** {self.__class__.__name__}.{func.__name__}({val})")
         res = func(self, val)
         return res
 
@@ -118,8 +122,9 @@ class Stock:
 
 
 def test_unsignedinteger():
+    global SHOW_VALIDATE_ON
     s = Stock("ACME", 50, 91.1)
-    print("+++++")
+    SHOW_VALIDATE_ON = True
     # s.shares = "few"
     s.shares = -10
 
