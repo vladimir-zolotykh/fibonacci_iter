@@ -43,6 +43,13 @@ def solve(pegs: PegsType, num_disks: int, src: int, dst: int, aux: int) -> None:
     solve(pegs, num_disks - 1, aux, dst, src)
 
 
+def test_validate():
+    init_pegs(pegs, 3)
+    move(pegs, 0, 1)
+    with pytest.raises(RuntimeError, match="Cannot put 2#0 over 1#1"):
+        move(pegs, 0, 1)
+
+
 @pytest.mark.parametrize(
     "num_disks, expected_num_moves",
     [
