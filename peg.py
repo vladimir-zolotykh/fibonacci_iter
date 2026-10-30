@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
-from copy import copy
+from typing import Self
+from copy import copy, deepcopy
 import logging
 import pytest
 
@@ -11,6 +12,19 @@ class Peg:
         self.num_disks = num_disks
         self.data: bytearray = bytearray(num_disks)
         self.ptr: int = -1
+
+    def __copy__(self) -> Self:
+        peg = Peg.__new__(Peg)
+        peg.num_disks = self.num_disks
+        peg.data = self.data.copy()
+        peg.ptr = -1
+        return peg
+
+    def __eq__(self, other) -> bool:
+        if isinstance(other, Peg):
+            return self.data == other.data
+        else:
+            return NotImplemented
 
     def put_disks(self):
         for x in range(self.num_disks, 0, -1):
@@ -34,7 +48,8 @@ class Peg:
         self.data[self.ptr] = disk
 
     def __bool__(self) -> bool:
-        return self.data == bytearray(self.num_disks)
+        # return self.data != bytearray(self.num_disks)
+        return self.ptr >= 0
 
     @property
     def disk(self) -> int:
@@ -73,7 +88,6 @@ class Board:
 
     def move(self, src: int, dst: int) -> None:
         self.validate(src, dst)
-        # self.pegs[dst].append(self.pegs[src].pop())
         self.pegs[dst].push(self.pegs[src].pop())
         self.num_moves += 1
 
@@ -105,11 +119,12 @@ def test_validate():
 )
 def test_solve(num_disks, expected_num_moves):
     brd = Board(num_disks)
-    orig = copy(brd.pegs[0])
+    # orig = copy(brd.pegs[0])
+    orig = deepcopy(brd.pegs[0])
     brd.solve(num_disks, 0, 2, 1)
     assert orig == brd.pegs[2]
     assert brd.num_moves == expected_num_moves
 
 
 if __name__ == "__main__":
-    test_solve()
+    test_solve(3, 7)
