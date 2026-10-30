@@ -119,8 +119,8 @@ def test_validate():
 )
 def test_solve(num_disks, expected_num_moves):
     brd = Board(num_disks)
-    # orig = copy(brd.pegs[0])
-    orig = deepcopy(brd.pegs[0])
+    orig = copy(brd.pegs[0])
+    # orig = deepcopy(brd.pegs[0])
     brd.solve(num_disks, 0, 2, 1)
     assert orig == brd.pegs[2]
     assert brd.num_moves == expected_num_moves
