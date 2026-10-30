@@ -6,21 +6,24 @@ import re
 
 
 class Token:
-    _symbols = {}
+    _tokens = {}
 
     def __new__(cls, name, pat="", val=""):
-        syms = __class__._symbols
-        if name not in syms:
-            sym = super().__new__(cls)
-            sym.name = name
-            sym.val = val
-            sym.pat = pat
-            syms[name] = sym
-        return syms[name]
+        tokens = __class__._tokens
+        if name not in tokens:
+            tok = super().__new__(cls)
+            tok.name = name
+            tok.val = val
+            tok.pat = pat
+            tokens[name] = tok
+        return tokens[name]
+
+    def __repr__(self):
+        return f"Token({self.name}, {self.pat}, {self.val})"
 
     @classmethod
     def masterpat(cls) -> str:
-        return "|".join("(?P<{name}>{pat})" for name, pat in cls._symbols.items())
+        return "|".join(f"(?P<{name}>{tok.pat})" for name, tok in cls._tokens.items())
 
 
 NUM = Token("NUM", r"\d+")
@@ -40,5 +43,5 @@ def iter_tokens(sexpr: str = "2 + (3 * 4) + 5") -> Iterator[Token]:
 
 
 if __name__ == "__main__":
-    for tok in re.finditer(Token.masterpat(), "2 + (3 * 4) + 5"):
+    for tok in iter_tokens("2 + (3 * 4) + 5"):
         print(tok)
