@@ -30,7 +30,7 @@ class Symbol:
 
     @classmethod
     def masterpat(cls) -> str:
-        return "|".join(sym.pat for sym in cls._symbols)
+        return "|".join(f"(?P<{name}>{sym.pat})" for name, sym in cls._symbols.items())
 
 
 LPAREN = Symbol("LPAREN", r"\(")
@@ -45,6 +45,7 @@ NUM = Symbol("NUM", r"\d+")
 
 class Token:
     def __init__(self, sym: Symbol):
+        assert isinstance(sym, Symbol)
         self.sym = sym
 
     def __eq__(self, other):
@@ -71,9 +72,9 @@ def iter_tokens(sexpr: str) -> Iterator[Token]:
     for match in re.finditer(Symbol.masterpat(), sexpr):
         if (grp := match.lastgroup) != "WS":
             if grp == "NUM":
-                yield TokenNum(grp, match.group(grp))
+                yield TokenNum(Symbol(grp), match.group(grp))
             else:
-                yield Token(grp)
+                yield Token(Symbol(grp))
 
 
 if __name__ == "__main__":
