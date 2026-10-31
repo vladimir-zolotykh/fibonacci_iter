@@ -3,6 +3,7 @@
 # PYTHON_ARGCOMPLETE_OK
 from typing import Iterator
 import re
+from textwrap import dedent
 
 
 token_specs = {
@@ -49,3 +50,21 @@ def iter_tokens(sexpr: str) -> Iterator[Token]:
 if __name__ == "__main__":
     for tok in iter_tokens("2 + (3 * 4) + 5"):
         print(tok)
+
+
+def test_iter_tokens(capsys):
+    for tok in iter_tokens("2 + (3 * 4) + 5"):
+        print(tok)
+    assert capsys.readouterr().out == dedent(
+        """\
+Token(NUM, 2)
+Token(PLUS, +)
+Token(LPAREN, ()
+Token(NUM, 3)
+Token(MUL, *)
+Token(NUM, 4)
+Token(RPAREN, ))
+Token(PLUS, +)
+Token(NUM, 5)
+        """
+    )
