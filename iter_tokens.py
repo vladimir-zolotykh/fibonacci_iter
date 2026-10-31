@@ -70,7 +70,10 @@ class TokenNum(Token):
 def iter_tokens(sexpr: str) -> Iterator[Token]:
     for match in re.finditer(Symbol.masterpat(), sexpr):
         if (grp := match.lastgroup) != "WS":
-            yield Token(Symbol(grp), match.group(grp))
+            if grp == "NUM":
+                yield TokenNum(grp, match.group(grp))
+            else:
+                yield Token(grp)
 
 
 if __name__ == "__main__":
