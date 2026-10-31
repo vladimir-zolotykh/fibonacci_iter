@@ -86,14 +86,14 @@ def test_iter_tokens(capsys):
         print(tok)
     assert capsys.readouterr().out == dedent(
         """\
-Token(NUM, 2)
-Token(PLUS, +)
-Token(LPAREN, ()
-Token(NUM, 3)
-Token(MUL, *)
-Token(NUM, 4)
-Token(RPAREN, ))
-Token(PLUS, +)
-Token(NUM, 5)
+TokenNum(2)
+Token(PLUS)
+Token(LPAREN)
+TokenNum(3)
+Token(MUL)
+TokenNum(4)
+Token(RPAREN)
+Token(PLUS)
+TokenNum(5)
         """
     )
