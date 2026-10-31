@@ -61,6 +61,7 @@ class Token:
 
 class TokenNum(Token):
     def __init__(self, sym: Symbol, val: float):
+        assert isinstance(val, float)
         super().__init__(sym)
         self.val = val
 
@@ -72,7 +73,8 @@ def iter_tokens(sexpr: str) -> Iterator[Token]:
     for match in re.finditer(Symbol.masterpat(), sexpr):
         if (grp := match.lastgroup) != "WS":
             if grp == "NUM":
-                yield TokenNum(Symbol(grp), match.group(grp))
+                # yield TokenNum(Symbol(grp), match.group(grp))
+                yield TokenNum(NUM, float(match.group(grp)))
             else:
                 yield Token(Symbol(grp))
 
@@ -87,14 +89,14 @@ def test_iter_tokens(capsys):
         print(tok)
     assert capsys.readouterr().out == dedent(
         """\
-TokenNum(2)
+TokenNum(2.0)
 Token(PLUS)
 Token(LPAREN)
-TokenNum(3)
+TokenNum(3.0)
 Token(MUL)
-TokenNum(4)
+TokenNum(4.0)
 Token(RPAREN)
 Token(PLUS)
-TokenNum(5)
+TokenNum(5.0)
         """
     )
