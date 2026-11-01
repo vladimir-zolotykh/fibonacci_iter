@@ -31,6 +31,10 @@ class Symbol:
         return f"Symbol({self.name})"
 
     @classmethod
+    def get_global(cls, name: str) -> Self:
+        return cls._symbols[name]
+
+    @classmethod
     def masterpat(cls) -> str:
         return "|".join(f"(?P<{name}>{sym.pat})" for name, sym in cls._symbols.items())
 
@@ -75,11 +79,11 @@ class TokenNum(Token):
 def iter_tokens(sexpr: str) -> Iterator[Token]:
     for match in re.finditer(Symbol.masterpat(), sexpr):
         if (grp := match.lastgroup) != "WS":
-            if grp == "NUM":
-                # yield TokenNum(Symbol(grp), match.group(grp))
-                yield TokenNum(NUM, float(match.group(grp)))
+            sym = Symbol.get_global(grp)
+            if sym == NUM:
+                yield TokenNum(sym, float(match.group(grp)))
             else:
-                yield Token(Symbol(grp))
+                yield Token(sym)
 
 
 class Node:

@@ -1,5 +1,5 @@
 from textwrap import dedent
-from iter_tokens import iter_tokens
+from parser import iter_tokens
 
 
 def test_iter_tokens(capsys):
