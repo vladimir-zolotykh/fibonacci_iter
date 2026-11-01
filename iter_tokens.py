@@ -3,13 +3,12 @@
 # PYTHON_ARGCOMPLETE_OK
 from typing import Self, Iterator, Callable, Any
 import re
-from textwrap import dedent
 
 
 class Symbol:
     _symbols = {}
 
-    def __new__(cls, name, pat=""):
+    def __new__(cls, name: str, pat: str = ""):
         syms = __class__._symbols
         if name not in syms:
             sym = super().__new__(cls)
@@ -17,6 +16,9 @@ class Symbol:
             sym.pat = pat
             syms[name] = sym
         return syms[name]
+
+    def __hash__(self):
+        return hash(self.name)
 
     def __eq__(self, other) -> bool:
         return (
@@ -89,7 +91,7 @@ class Node:
     def __init_subclass__(cls, **kwargs):
         super().__init_subclass__(**kwargs)
         if hasattr(cls, "_op"):
-            __class__.node_map[getattr(cls, "_op")] = cls
+            __class__._node_map[getattr(cls, "_op")] = cls
 
     def __eq__(self, other: Any) -> bool:
         return (
