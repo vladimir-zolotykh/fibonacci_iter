@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
-from typing import Iterator, Callable, Any
+from typing import Self, Iterator, Callable, Any
 import re
 from textwrap import dedent
 
@@ -80,6 +80,17 @@ def iter_tokens(sexpr: str) -> Iterator[Token]:
 
 
 class Node:
+    _node_map: dict[Symbol, type(object)] = {}
+
+    @classmethod
+    def get_node(cls) -> Self:
+        return cls._node_map[cls]
+
+    def __init_subclass__(cls, **kwargs):
+        super().__init_subclass__(**kwargs)
+        if hasattr(cls, "_op"):
+            __class__.node_map[getattr(cls, "_op")] = cls
+
     def __eq__(self, other: Any) -> bool:
         return (
             self.__dict__ == other.__dict__
@@ -107,19 +118,19 @@ class BinOp(Node):
 
 
 class Plus(BinOp):
-    _op = "+"
+    _op = PLUS
 
 
 class Minus(BinOp):
-    _op = "-"
+    _op: Symbol = MINUS
 
 
 class Mul(BinOp):
-    _op = "*"
+    _op: Symbol = MUL
 
 
 class Div(BinOp):
-    _op = "/"
+    _op: Symbol = DIV
 
 
 class Parser:
@@ -136,29 +147,16 @@ class Parser:
         res: Node = func()
         while (tok := self.tok) and tok in ops:
             self._consume()
-            cls = Plus if tok == PLUS else Minus
-            res = cls(res, func())
+            res = Node.get_node(tok)(res, func())
         return res
 
         pass
 
     def expr(self) -> Node:
-        res: Node = self.term()
-        # return self.iter_ops((PLUS, MINUS), self.term)
-        while (tok := self.tok) and tok in (PLUS, MINUS):
-            self._consume()
-            cls = Plus if tok == PLUS else Minus
-            res = cls(res, self.term())
-        return res
+        return self.iter_ops((PLUS, MINUS), self.term)
 
     def term(self) -> Node:
-        res: Node = self.factor()
-        # return self.iter_ops((MUL, DIV), self.factor)
-        while (tok := self.tok) and tok in (MUL, DIV):
-            self._consume()
-            cls = Mul if tok == MUL else Div
-            res = cls(res, self.factor())
-        return res
+        return self.iter_ops((MUL, DIV), self.factor)
 
     def factor(self) -> Node:
         if self.tok == LPAREN:
