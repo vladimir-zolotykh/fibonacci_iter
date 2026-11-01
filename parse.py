@@ -31,7 +31,7 @@ class Symbol:
         return f"Symbol({self.name})"
 
     @classmethod
-    def get_global(cls, name: str) -> Self:
+    def get_sym(cls, name: str) -> Self:
         return cls._symbols[name]
 
     @classmethod
@@ -50,9 +50,10 @@ NUM = Symbol("NUM", r"\d+")
 
 
 class Token:
-    def __init__(self, sym: Symbol):
+    def __init__(self, sym: Symbol, val: str = ""):
         assert isinstance(sym, Symbol)
         self.sym = sym
+        self.val = float(val) if isinstance(val, float) else val
 
     def __eq__(self, other):
         if isinstance(other, Token):
@@ -63,27 +64,16 @@ class Token:
             return NotImplemented
 
     def __repr__(self):
-        return f"Token({self.sym.name})"
-
-
-class TokenNum(Token):
-    def __init__(self, sym: Symbol, val: float):
-        assert isinstance(val, float)
-        super().__init__(NUM)
-        self.val = val
-
-    def __repr__(self):
-        return f"TokenNum({self.val})"
+        if self.val is None:
+            return f"Token({self.sym.name})"
+        else:
+            return f"Token({self.sym.name}, {self.val})"
 
 
 def iter_tokens(sexpr: str) -> Iterator[Token]:
     for match in re.finditer(Symbol.masterpat(), sexpr):
         if (grp := match.lastgroup) != "WS":
-            sym = Symbol.get_global(grp)
-            if sym == NUM:
-                yield TokenNum(sym, float(match.group(grp)))
-            else:
-                yield Token(sym)
+            yield Token(Symbol.get_sym(grp), match.group(grp))
 
 
 class Node:
