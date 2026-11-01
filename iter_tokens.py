@@ -51,11 +51,12 @@ class Token:
         self.sym = sym
 
     def __eq__(self, other):
-        return (
-            self.__dict__ == other.__dict__
-            if isinstance(other, Token)
-            else NotImplemented
-        )
+        if isinstance(other, Token):
+            return self.__dict__ == other.__dict__
+        elif isinstance(other, Symbol):
+            return self.sym == other
+        else:
+            return NotImplemented
 
     def __repr__(self):
         return f"Token({self.sym.name})"
@@ -64,7 +65,7 @@ class Token:
 class TokenNum(Token):
     def __init__(self, sym: Symbol, val: float):
         assert isinstance(val, float)
-        super().__init__(sym)
+        super().__init__(NUM)
         self.val = val
 
     def __repr__(self):
@@ -85,8 +86,8 @@ class Node:
     _node_map: dict[Symbol, type(object)] = {}
 
     @classmethod
-    def get_node(cls) -> Self:
-        return cls._node_map[cls]
+    def get_node(cls, tok) -> Self:
+        return cls._node_map[tok]
 
     def __init_subclass__(cls, **kwargs):
         super().__init_subclass__(**kwargs)
