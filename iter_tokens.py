@@ -86,8 +86,8 @@ class Node:
     _node_map: dict[Symbol, type(object)] = {}
 
     @classmethod
-    def get_node(cls, tok) -> Self:
-        return cls._node_map[tok]
+    def get_node(cls, tok: Symbol | Token) -> Self:
+        return cls._node_map[tok if isinstance(tok, Symbol) else tok.sym]
 
     def __init_subclass__(cls, **kwargs):
         super().__init_subclass__(**kwargs)
@@ -112,7 +112,6 @@ class Num(Node):
 
 class BinOp(Node):
     def __init__(self, left: Node, right: Node) -> Node:
-        super().__init__(self._op)
         self.left = left
         self.right = right
 
