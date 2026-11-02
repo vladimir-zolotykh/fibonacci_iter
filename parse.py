@@ -28,7 +28,8 @@ class Symbol:
         )
 
     def __repr__(self):
-        return f"Symbol({self.name})"
+        # return f"Symbol({self.name})"
+        return self.name
 
     @classmethod
     def get_sym(cls, name: str) -> Self:
@@ -64,10 +65,8 @@ class Token:
             return NotImplemented
 
     def __repr__(self):
-        if self.val is None:
-            return f"Token({self.sym.name})"
-        else:
-            return f"Token({self.sym.name}, {self.val})"
+        # return f"Token({self.sym.name}{'' if self.val is None else ', ' + self.val})"
+        return f"Token({self.sym}, {self.val})"
 
 
 def iter_tokens(sexpr: str) -> Iterator[Token]:
@@ -98,6 +97,7 @@ class Node:
 
 class Num(Node):
     def __init__(self, val: float):
+        assert isinstance(val, float)
         self.val = val
 
     def __repr__(self) -> str:
@@ -160,7 +160,8 @@ class Parser:
             res = self.expr()
             self._expect(RPAREN)
         else:
-            res = Num(self.tok)
+            res = Num(float(self.tok.val))
+            # res = Num(self.tok)
             self._consume()
         return res
 
