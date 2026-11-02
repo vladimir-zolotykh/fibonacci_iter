@@ -3,6 +3,7 @@
 # PYTHON_ARGCOMPLETE_OK
 from typing import Self, Iterator, Callable, Any
 import re
+import operator
 
 
 class Symbol:
@@ -103,6 +104,9 @@ class Num(Node):
     def __repr__(self) -> str:
         return f"Num({self.val})"
 
+    def eval(self) -> float:
+        return self.val
+
 
 class BinOp(Node):
     def __init__(self, left: Node, right: Node) -> Node:
@@ -112,9 +116,18 @@ class BinOp(Node):
     def __repr__(self) -> str:
         return f"{type(self).__name__}({repr(self.left)}, {repr(self.right)})"
 
+    def eval(self) -> float:
+        oper: dict[Symbol, Callable] = {
+            PLUS: operator.add,
+            MINUS: operator.sub,
+            MUL: operator.mul,
+            DIV: operator.truediv,
+        }
+        return oper[self._op](self.left.eval(), self.right.eval())
+
 
 class Plus(BinOp):
-    _op = PLUS
+    _op: Symbol = PLUS
 
 
 class Minus(BinOp):
@@ -182,4 +195,4 @@ if __name__ == "__main__":
     sexpr = "2 + (3 * 4) + 5"
     p = Parser()
     n: Node = p.parse(sexpr)
-    print(n)
+    print(n.eval())
