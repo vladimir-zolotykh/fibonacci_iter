@@ -4,6 +4,7 @@
 from typing import Self, Iterator, Callable, Any
 import re
 import operator
+import pytest
 
 
 class Symbol:
@@ -196,3 +197,13 @@ if __name__ == "__main__":
     p = Parser()
     n: Node = p.parse(sexpr)
     print(n.eval())
+
+
+@pytest.mark.parametrize(
+    "sexpr",
+    [
+        "2 + (3 * 4) + 5",
+    ],
+)
+def test_parser_eval(sexpr: str):
+    assert Parser().parse(sexpr).eval() == eval(sexpr)
