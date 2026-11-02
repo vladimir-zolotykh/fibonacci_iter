@@ -173,10 +173,11 @@ class Parser:
             self._consume()
             res = self.expr()
             self._expect(RPAREN)
-        else:
+        elif self.tok == NUM:
             res = Num(float(self.tok.val))
-            # res = Num(self.tok)
             self._consume()
+        else:
+            raise SyntaxError(f"{self.tok!r}: Expected NUM or LPAREN")
         return res
 
     def _advance(self) -> Token:
@@ -202,8 +203,18 @@ if __name__ == "__main__":
 @pytest.mark.parametrize(
     "sexpr",
     [
+        "2",
+        "2 + 3 * 4",
+        "2 + (3 + 4) * 5",
         "2 + (3 * 4) + 5",
+        "(3 * 4)",
     ],
 )
 def test_parser_eval(sexpr: str):
     assert Parser().parse(sexpr).eval() == eval(sexpr)
+
+
+def test_parser_eval_error():
+    sexpr = "2 + (3 + * 4)"
+    with pytest.raises(SyntaxError, match="Expected NUM or LPAREN"):
+        Parser().parse(sexpr)
