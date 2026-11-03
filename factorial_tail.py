@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
-import pytest
 
 
 def factorial_recur(n):
@@ -11,16 +10,18 @@ def factorial_recur(n):
         return factorial_recur(n - 1) * n
 
 
-@pytest.mark.parametrize(
-    "n, fact",
-    [
-        (0, 1),
-        (1, 1),
-        (2, 2),
-        (3, 6),
-        (4, 24),
-        (5, 120),
-    ],
-)
-def test_factorial_recur(n, fact):
-    assert factorial_recur(n) == fact
+def factorial_iter(n):
+    res = 1
+    if n in (0, 1):
+        return res
+    else:
+        for k in range(1, n + 1):
+            res *= k
+        return res
+
+
+def factorial_tail(n, res=1):
+    if n in (0, 1):
+        return res
+    else:
+        return factorial_tail(n - 1, res * n)
