@@ -19,6 +19,10 @@ def fib_iter(n, res: dict[int, int] = {0: 0, 1: 1}):
     return res[n]
 
 
+def fib_tail(n, res: dict[int, int] = {0: 0, 1: 1}):
+    pass
+
+
 @pytest.mark.parametrize(
     "n, res",
     [
