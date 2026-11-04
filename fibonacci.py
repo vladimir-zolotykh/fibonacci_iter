@@ -11,6 +11,14 @@ def fib_recur(n):
         return fib_recur(n - 2) + fib_recur(n - 1)
 
 
+def fib_iter(n, res: dict[int, int] = {0: 0, 1: 1}):
+    if n in (0, 1):
+        return res[n]
+    for k in range(2, n + 1):
+        res[k] = res[k - 2] + res[k - 1]
+    return res[n]
+
+
 @pytest.mark.parametrize(
     "n, res",
     [
@@ -28,3 +36,4 @@ def fib_recur(n):
 )
 def test_fib(n, res):
     assert fib_recur(n) == res
+    assert fib_iter(n) == res
