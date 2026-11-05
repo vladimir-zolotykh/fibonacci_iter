@@ -19,7 +19,7 @@ def singledispatch(func):
     def register(typ):
         def inner(func):
             registry[typ] = func
-            return wrapper
+            return func
 
         return inner
 
@@ -36,17 +36,17 @@ def show(x):
 
 
 @show.register(int)
-def show(x):
+def _(x):
     print(f"{x} is int")
 
 
 @show.register(str)
-def show(x):
+def _(x):
     print(f"{x} is str")
 
 
 @show.register(float)
-def show(x):
+def _(x):
     print(f"{x} is float")
 
 
