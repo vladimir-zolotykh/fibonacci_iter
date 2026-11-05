@@ -17,8 +17,11 @@ def singledispatch(func):
         return implementation(arg, *args, **kwargs)
 
     def register(typ):
-        registry[typ] = func
-        return wrapper
+        def inner(func):
+            registry[typ] = func
+            return wrapper
+
+        return inner
 
     wrapper.register = register
     wrapper.dispatch = dispatch
@@ -49,5 +52,5 @@ def show(x):
 
 if __name__ == "__main__":
     show(42)
-    # show("hello")
-    # show(3.14)
+    show("hello")
+    show(3.14)
