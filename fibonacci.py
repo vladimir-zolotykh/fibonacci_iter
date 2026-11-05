@@ -19,8 +19,13 @@ def fib_iter(n, res: dict[int, int] = {0: 0, 1: 1}):
     return res[n]
 
 
-def fib_tail(n, res: dict[int, int] = {0: 0, 1: 1}):
-    pass
+def fib_tail(n, k=2, res={0: 0, 1: 1}):
+    if n in (0, 1):
+        return res[n]
+    if k < n + 1:
+        res[k] = res[k - 2] + res[k - 1]
+        return fib_tail(n, k + 1, res)
+    return res[n]
 
 
 @pytest.mark.parametrize(
@@ -41,3 +46,4 @@ def fib_tail(n, res: dict[int, int] = {0: 0, 1: 1}):
 def test_fib(n, res):
     assert fib_recur(n) == res
     assert fib_iter(n) == res
+    assert fib_tail(n) == res
