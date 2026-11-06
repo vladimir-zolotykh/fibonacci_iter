@@ -23,6 +23,10 @@ def arg1dispatch(func):
 
         return inner
 
+    wrapper.register = register
+    wrapper.registry = registry
+    wrapper.dispatch = dispatch
+
     return wrapper
 
 
@@ -45,3 +49,9 @@ def _(x):
 @show.register(float)
 def _(x):
     print(f"{x} is float")
+
+
+if __name__ == "__main__":
+    show(9)
+    show("hello")
+    show(3.14159)
