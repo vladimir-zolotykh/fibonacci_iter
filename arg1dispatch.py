@@ -55,7 +55,8 @@ def _(x):
 
 def test_arg1dispatch_mro(capsys):
     class A:
-        pass
+        def __repr__(self):
+            return f"<{type(self).__name__} object>"
 
     class B(A):
         pass
@@ -65,20 +66,20 @@ def test_arg1dispatch_mro(capsys):
 
     @show.register(A)
     def _(x):
-        print(f"{x.__class__.__name__} is A")
+        print(f"{x} is A")
 
     @show.register(C)
     def _(x):
-        print(f"{x.__class__.__name__} is C")
+        print(f"{x} is C")
 
     show(C())
     show(B())
     show(A())
     assert capsys.readouterr().out == dedent(
         """\
-C is C
-B is A
-A is A
+<C object> is C
+<B object> is A
+<A object> is A
 """
     )
 
