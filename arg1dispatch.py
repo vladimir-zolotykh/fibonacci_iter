@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
+from textwrap import dedent
+import pytest
 
 
 def arg1dispatch(func):
@@ -51,7 +53,24 @@ def _(x):
     print(f"{x} is float")
 
 
-if __name__ == "__main__":
+def test_arg1dispatch_main(capsys):
+    main()
+    assert capsys.readouterr().out == dedent(
+        """\
+9 is int
+hello is str
+3.14159 is float
+{'a': 1} is neither int, str, float
+"""
+    )
+
+
+def main():
     show(9)
     show("hello")
     show(3.14159)
+    show({"a": 1})
+
+
+if __name__ == "__main__":
+    main()
