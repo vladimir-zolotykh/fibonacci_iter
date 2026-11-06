@@ -53,6 +53,36 @@ def _(x):
     print(f"{x} is float")
 
 
+def test_arg1dispatch_mro(capsys):
+    class A:
+        pass
+
+    class B(A):
+        pass
+
+    class C(B):
+        pass
+
+    @show.register(A)
+    def _(x):
+        print(f"{x.__class__.__name__} is A")
+
+    @show.register(C)
+    def _(x):
+        print(f"{x.__class__.__name__} is C")
+
+    show(C())
+    show(B())
+    show(A())
+    assert capsys.readouterr().out == dedent(
+        """\
+C is C
+B is A
+A is A
+"""
+    )
+
+
 def test_arg1dispatch_main(capsys):
     main()
     assert capsys.readouterr().out == dedent(
