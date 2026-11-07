@@ -12,7 +12,7 @@ num_moves: int = 0
 
 
 def init_pegs(num_disks: int = 3):
-    assert num_disks in range(9)
+    assert num_disks in range(10)
     pegs[0] = array("i", list(range(num_disks, 0, -1)))
     pegs[1] = array("i")
     pegs[2] = array("i")
@@ -43,15 +43,16 @@ def solve(n: int, src: int, dst: int, aux: int):
     assert src in range(3) and dst in range(3)
     if n < 1:  # n < 0
         return
-    solve(n - 1, src, dst, aux)
+    solve(n - 1, src, aux, dst)
     move(src, dst)
     solve(n - 1, aux, dst, src)
 
 
-def test_solve(num_disks: int = 3):
+@pytest.mark.parametrize("num_disks", (3, 4, 5, 6, 7, 8, 9))
+def test_solve(num_disks):
     init_pegs(num_disks)
     orig = deepcopy(pegs[0])
-    solve(3, 0, 2, 1)
+    solve(num_disks, 0, 2, 1)
     assert orig == pegs[2]
 
 
