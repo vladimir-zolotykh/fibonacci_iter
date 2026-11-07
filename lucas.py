@@ -1,0 +1,53 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+# PYTHON_ARGCOMPLETE_OK
+"""Tower of Hanoi game"""
+from array import array
+from copy import deepcopy
+
+pegs = [array("i"), array("i"), array("i")]
+num_moves: int = 0
+
+
+def init_pegs(num_disks: int = 3):
+    assert num_disks in range(9)
+    pegs[0] = array("i", list(range(num_disks, 0, -1)))
+    pegs[1] = array["i"]
+    pegs[2] = array["i"]
+
+
+def validate(src: int, dst: int):
+    assert src in range(3) and dst in range(3)
+    if not src:
+        return
+    disk = pegs[src][-1]
+    if not pegs[dst]:
+        return
+    under = pegs[dst][-1]
+    if disk >= under:
+        raise ValueError(f"Cannot put {disk} over {under}")
+
+
+def move(src: int, dst: int):
+    global num_moves
+    assert src in range(3) and dst in range(3)
+    validate(src, dst)
+    pegs[dst].append(pegs[src].pop())
+    num_moves += 1
+
+
+def solve(n: int, src: int, dst: int, aux: int):
+    assert 0 in range(9)
+    assert src in range(3) and dst in range(3)
+    if n < 1:  # n < 0
+        return
+    solve(n - 1, src, dst, aux)
+    move(src, dst)
+    solve(n - 1, aux, dst, src)
+
+
+def test_solve(num_disks: int = 3):
+    init_pegs(num_disks)
+    orig = deepcopy(pegs[0])
+    solve(3, 0, 2)
+    assert orig == pegs[2]
