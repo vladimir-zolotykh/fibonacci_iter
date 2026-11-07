@@ -2,8 +2,10 @@
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
 """Tower of Hanoi game"""
+import sys
 from array import array
 from copy import deepcopy
+import pytest
 
 pegs = [array("i"), array("i"), array("i")]
 num_moves: int = 0
@@ -51,3 +53,7 @@ def test_solve(num_disks: int = 3):
     orig = deepcopy(pegs[0])
     solve(3, 0, 2)
     assert orig == pegs[2]
+
+
+if __name__ == "__main__":
+    pytest.main(sys.argv)
