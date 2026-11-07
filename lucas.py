@@ -14,13 +14,13 @@ num_moves: int = 0
 def init_pegs(num_disks: int = 3):
     assert num_disks in range(9)
     pegs[0] = array("i", list(range(num_disks, 0, -1)))
-    pegs[1] = array["i"]
-    pegs[2] = array["i"]
+    pegs[1] = array("i")
+    pegs[2] = array("i")
 
 
 def validate(src: int, dst: int):
     assert src in range(3) and dst in range(3)
-    if not src:
+    if not pegs[src]:
         return
     disk = pegs[src][-1]
     if not pegs[dst]:
@@ -51,7 +51,7 @@ def solve(n: int, src: int, dst: int, aux: int):
 def test_solve(num_disks: int = 3):
     init_pegs(num_disks)
     orig = deepcopy(pegs[0])
-    solve(3, 0, 2)
+    solve(3, 0, 2, 1)
     assert orig == pegs[2]
 
 
