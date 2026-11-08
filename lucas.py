@@ -19,7 +19,7 @@ def init_pegs(num_disks: int = 3):
 
 
 def validate(src: int, dst: int):
-    assert src in range(3) and dst in range(3)
+    assert {src, dst}.issubset(set(range(3)))
     if not pegs[src]:
         return
     disk = pegs[src][-1]
@@ -32,7 +32,7 @@ def validate(src: int, dst: int):
 
 def move(src: int, dst: int):
     global num_moves
-    assert src in range(3) and dst in range(3)
+    assert {src, dst}.issubset(set(range(3)))
     validate(src, dst)
     pegs[dst].append(pegs[src].pop())
     num_moves += 1
@@ -40,7 +40,7 @@ def move(src: int, dst: int):
 
 def solve(n: int, src: int, dst: int, aux: int):
     assert 0 in range(9)
-    assert src in range(3) and dst in range(3)
+    assert {src, dst}.issubset(set(range(3)))
     if n < 1:  # n < 0
         return
     solve(n - 1, src, aux, dst)
