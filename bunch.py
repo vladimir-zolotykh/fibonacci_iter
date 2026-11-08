@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
 import sys
+import warnings
 from textwrap import dedent
 import pytest
 
@@ -16,7 +17,7 @@ class BunchMeta(type):
                     val = kwargs.pop(key)
                 setattr(self, key, val)
             if kwargs:
-                raise Warning()
+                warnings.warn("Not all kwargs are used")
 
         def __repr__(self):
             changed = {}
