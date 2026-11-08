@@ -63,6 +63,9 @@ def test_cardispatch(capsys):
     assert capsys.readouterr().out == dedent(
         """\
 11 is int
+31.4159 is float
+foo is str
+type of {'a': 1, 'b': 2} is unknown
 """
     )
 
