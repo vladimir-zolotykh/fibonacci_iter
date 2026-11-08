@@ -39,7 +39,7 @@ def move(src: int, dst: int):
 
 
 def solve(n: int, src: int, dst: int, aux: int):
-    assert 0 in range(9)
+    assert n in range(10)
     assert {src, dst}.issubset(set(range(3)))
     if n < 1:  # n < 0
         return
