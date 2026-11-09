@@ -50,19 +50,15 @@ class Exercise(Bunch):
 def test_exercise(capsys):
     p = Exercise()
     print(p)
-    p = Exercise(name="bench press", weight=77.5, reps=2)
+    p = Exercise(name="bench press", weight=77.5, reps=3)
     print(p)
     assert capsys.readouterr().out == dedent(
         """\
 Exercise()
-Exercise(name="",weight="", reps="")
+Exercise(name='bench press', weight=77.5, reps=3)
 """
     )
 
 
 if __name__ == "__main__":
-    p = Exercise(name="bench press", weight=77.5, reps=3)
-    print(p)
-    # print(p.name, p.weight, p.reps)
-    exit(0)
     pytest.main(sys.args)
