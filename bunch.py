@@ -24,7 +24,8 @@ class BunchMeta(type):
             for key, default in defaults.items():
                 if (val := getattr(self, key)) != default:
                     changed[key] = val
-            return "".join(f"{key}={val}" for key, val in changed.items())
+            args = "".join(f"{key}={val}" for key, val in changed.items())
+            return f"{type(self).__name__}({args})"
 
         for key, val in clsdict.items():
             if key[:2] == "__" and key[-2:] == "__":
@@ -49,7 +50,7 @@ class Exercise(Bunch):
 def test_exercise(capsys):
     p = Exercise()
     print(p)
-    p = Exercise("bench press", 77.5, 2)
+    p = Exercise(name="bench press", weight=77.5, reps=2)
     print(p)
     assert capsys.readouterr().out == dedent(
         """\
@@ -60,4 +61,8 @@ Exercise(name="",weight="", reps="")
 
 
 if __name__ == "__main__":
+    p = Exercise(name="bench press, weight=77.5, reps=3")
+    print(p)
+    # print(p.name, p.weight, p.reps)
+    exit(0)
     pytest.main(sys.args)
