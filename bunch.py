@@ -24,7 +24,7 @@ class BunchMeta(type):
             for key, default in defaults.items():
                 if (val := getattr(self, key)) != default:
                     changed[key] = val
-            args = "".join(f"{key}={val}" for key, val in changed.items())
+            args = ", ".join(f"{key}={val!r}" for key, val in changed.items())
             return f"{type(self).__name__}({args})"
 
         for key, val in clsdict.items():
@@ -61,7 +61,7 @@ Exercise(name="",weight="", reps="")
 
 
 if __name__ == "__main__":
-    p = Exercise(name="bench press, weight=77.5, reps=3")
+    p = Exercise(name="bench press", weight=77.5, reps=3)
     print(p)
     # print(p.name, p.weight, p.reps)
     exit(0)
