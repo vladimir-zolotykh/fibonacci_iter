@@ -48,9 +48,17 @@ class Exercise(Bunch):
     reps = 2
 
 
-def test_exercise_warn(capsys):
+def test_exercise_warn():
     with pytest.raises(UserWarning, match="Not all kwargs are used"):
         Exercise(job="Junior engineer")
+
+
+def test_init_overwrite():
+    with pytest.raises(TypeError, match="Cannot overwrite __init__, __repr__"):
+
+        class Exercise(Bunch):
+            def __init__(self):
+                pass
 
 
 def test_exercise(capsys):
