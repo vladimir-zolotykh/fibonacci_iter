@@ -18,7 +18,8 @@ class BunchMeta(type):
                     val = kwargs.pop(key)
                 setattr(self, key, val)
             if kwargs:
-                warnings.warn("Not all kwargs are used")
+                args = ", ".join(f"parameter(s) {v!r}" for v in list(kwargs))
+                warnings.warn(f"{args} not used")
 
         def __repr__(self):
             args = ", ".join(
