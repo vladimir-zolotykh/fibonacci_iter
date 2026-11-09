@@ -21,11 +21,11 @@ class BunchMeta(type):
                 warnings.warn("Not all kwargs are used")
 
         def __repr__(self):
-            changed = {}
-            for key, default in defaults.items():
-                if (val := getattr(self, key)) != default:
-                    changed[key] = val
-            args = ", ".join(f"{key}={val!r}" for key, val in changed.items())
+            args = ", ".join(
+                f"{key}={val!r}"
+                for key, default in defaults.items()
+                if (val := getattr(self, key)) != default
+            )
             return f"{type(self).__name__}({args})"
 
         for key, val in clsdict.items():
