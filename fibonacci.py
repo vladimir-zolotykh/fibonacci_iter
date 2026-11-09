@@ -28,6 +28,16 @@ def fib_tail(n, k=2, res={0: 0, 1: 1}):
     return res[n]
 
 
+def fib_tail_yield(n, k=2, res={0: 0, 1: 1}):
+    if n in (0, 1):
+        yield res[n]
+    else:
+        if k < n + 1:
+            res[k] = res[k - 2] + res[k - 1]
+            yield from fib_tail_yield(n, k + 1, res)
+        yield res[n]
+
+
 @pytest.mark.parametrize(
     "n, res",
     [
@@ -47,3 +57,4 @@ def test_fib(n, res):
     assert fib_recur(n) == res
     assert fib_iter(n) == res
     assert fib_tail(n) == res
+    assert next(fib_tail_yield(n)) == res
