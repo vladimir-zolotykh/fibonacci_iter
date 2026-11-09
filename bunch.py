@@ -4,6 +4,7 @@
 import sys
 import warnings
 from textwrap import dedent
+import re
 import pytest
 
 
@@ -47,6 +48,11 @@ class Exercise(Bunch):
     reps = 2
 
 
+def test_exercise_warn(capsys):
+    with pytest.raises(UserWarning, match="Not all kwargs are used"):
+        Exercise(job="Junior engineer")
+
+
 def test_exercise(capsys):
     p = Exercise()
     print(p)
@@ -61,4 +67,6 @@ Exercise(name='bench press', weight=77.5, reps=3)
 
 
 if __name__ == "__main__":
+    Exercise(job="Junior engineer")
+    exit(1)
     pytest.main(sys.args)
