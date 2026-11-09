@@ -50,7 +50,7 @@ class Exercise(Bunch):
 
 
 def test_exercise_warn():
-    with pytest.raises(UserWarning, match="Not all kwargs are used"):
+    with pytest.raises(UserWarning, match=re.escape("parameter(s) 'job' not used")):
         Exercise(job="Junior engineer")
 
 
