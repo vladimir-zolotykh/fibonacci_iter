@@ -67,6 +67,4 @@ Exercise(name='bench press', weight=77.5, reps=3)
 
 
 if __name__ == "__main__":
-    Exercise(job="Junior engineer")
-    exit(1)
-    pytest.main(sys.args)
+    pytest.main(sys.argv)
