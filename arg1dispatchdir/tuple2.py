@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
 from operator import itemgetter
+import pytest
 
 
 class TupleMeta(type):
@@ -21,6 +22,15 @@ class Tuple(tuple, metaclass=TupleMeta):
 
 class Exercise(Tuple):
     fields = ["name", "weight", "reps"]
+
+
+@pytest.fixture
+def exer():
+    return Exercise("squat", 86, 2)
+
+
+def test_exercise(exer):
+    assert str(exer) == "('squat', 86, 2)"
 
 
 if __name__ == "__main__":
