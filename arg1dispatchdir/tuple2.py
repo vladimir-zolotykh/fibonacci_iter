@@ -33,6 +33,11 @@ def test_exercise(exer):
     assert str(exer) == "('squat', 86, 2)"
 
 
+def test_exercise_type_error(capsys):
+    with pytest.raises(TypeError, match="Exercise gets exactly 3 arguments"):
+        Exercise("squat", 86)
+
+
 if __name__ == "__main__":
     e = Exercise("squat", 86, 2)
     print(e)
