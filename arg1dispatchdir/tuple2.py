@@ -8,7 +8,7 @@ class TupleMeta(type):
     def __init__(cls, clsname, bases, clsdict):
         super().__init__(clsname, bases, clsdict)
         fields = clsdict.get("fields", [])
-        for name, index in enumerate(fields):
+        for index, name in enumerate(fields):
             setattr(cls, name, property(itemgetter(index)))
 
 
